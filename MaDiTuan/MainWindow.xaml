@@ -1,0 +1,84 @@
+﻿<Window x:Class="MaDiTuan.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Knight's Tour" Height="700" Width="800">
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="img\bg_img.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
+        <DockPanel Margin="10">
+            <Label Content="KNIGHT'S TOUR PROBLEM" FontSize="40" DockPanel.Dock="Top" HorizontalAlignment="Center"
+                   FontFamily="Constantia" FontWeight="Bold" >
+                <Label.Effect>
+                    <DropShadowEffect/>
+                </Label.Effect>
+            </Label>
+            <Label Content="Solving by Backtracking and Warnsdorff" FontSize="25" DockPanel.Dock="Top" HorizontalAlignment="Center"
+                    FontFamily="Constantia" FontWeight="Bold" >
+            </Label>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,10,0,10" VerticalAlignment="Center" HorizontalAlignment="Center" >
+
+                <TextBlock Text="Start X:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox x:Name="StartXBox" Width="40" Margin="0,0,10,0" />
+
+                <TextBlock Text="Start Y:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <ComboBox x:Name="StartYBox" Width="40" Margin="0,0,10,0" />
+
+                <Button x:Name="SolveButton" Content="Solve" Width="60" Click="SolveButton_Click" Margin="0,0,10,0"/>
+                <Button x:Name="RetryButton" Content="Retry" Width="60" Click="RetryButton_Click" IsEnabled="False"/>
+            </StackPanel>
+
+            <Grid x:Name="MainGrid" Margin="10" Width="450" Height="450">
+                <!-- 9x9 grid -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Hàng đầu là số cột -->
+                <TextBlock Grid.Row="0" Grid.Column="0" />
+                <!-- Các chỉ số cột -->
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="0" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="1" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="3" Text="2" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="3" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="5" Text="4" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="6" Text="5" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="7" Text="6" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="0" Grid.Column="8" Text="7" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+
+                <!-- Các chỉ số hàng -->
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="0" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="1" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="2" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="3" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="4" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="5" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="7" Grid.Column="0" Text="6" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+                <TextBlock Grid.Row="8" Grid.Column="0" Text="7" Background="LightYellow" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Width="20" TextAlignment="Center"/>
+
+
+                <!-- Phần bàn cờ -->
+                <Grid x:Name="BoardGrid" Grid.Row="1" Grid.Column="1" Grid.RowSpan="8" Grid.ColumnSpan="8" />
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>
