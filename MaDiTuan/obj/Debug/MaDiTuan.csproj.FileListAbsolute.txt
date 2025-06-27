@@ -1,0 +1,14 @@
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\bin\Debug\MaDiTuan.exe.config
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\bin\Debug\MaDiTuan.exe
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\bin\Debug\MaDiTuan.pdb
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MaDiTuan.csproj.AssemblyReference.cache
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MainWindow.g.cs
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\App.g.cs
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MaDiTuan_MarkupCompile.cache
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MainWindow.baml
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MaDiTuan.g.resources
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MaDiTuan.Properties.Resources.resources
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MaDiTuan.csproj.GenerateResource.cache
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MaDiTuan.csproj.CoreCompileInputs.cache
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MaDiTuan.exe
+D:\MySoftwareProjects\MaDiTuan\MaDiTuan\obj\Debug\MaDiTuan.pdb
