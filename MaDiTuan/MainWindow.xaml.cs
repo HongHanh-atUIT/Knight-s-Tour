@@ -13,6 +13,8 @@ namespace MaDiTuan
         int[,] board = new int[N, N];
         int[] dx = { 2, 1, -1, -2, -2, -1, 1, 2 };
         int[] dy = { 1, 2, 2, 1, -1, -2, -2, -1 };
+        bool isPaused = false;
+
 
         public MainWindow()
         {
@@ -43,6 +45,12 @@ namespace MaDiTuan
             StartYBox.IsEnabled = true;
         }
 
+        private void PauseResumeButton_Click(object sender, RoutedEventArgs e)
+        {
+            isPaused = !isPaused;
+            PauseResumeButton.Content = isPaused ? "Tiếp tục" : "Tạm dừng";
+        }
+
         private async void SolveButton_Click(object sender, RoutedEventArgs e)
         {
             int startX = StartXBox.SelectedIndex;
@@ -55,7 +63,9 @@ namespace MaDiTuan
             StartXBox.IsEnabled = false;
             StartYBox.IsEnabled = false;
 
-            bool ok = await Task.Run(() => SolveKnightTour(startX, startY, 1));
+            var path = new List<(int, int)>();
+
+            bool ok = await Task.Run(() => SolveKnightTour(startX, startY, 1, path));
 
             if (!ok)
             {
@@ -64,23 +74,19 @@ namespace MaDiTuan
                 return;
             }
 
-            var path = new List<(int x, int y)>();
-            for (int step = 0; step < N * N; step++)
-            {
-                for (int i = 0; i < N; i++)
-                    for (int j = 0; j < N; j++)
-                        if (board[i, j] == step)
-                            path.Add((i, j));
-            }
-
             await AnimatePath(path);
-            MessageBox.Show("Xin chúc mừng! Lời giải đã hoàn tất, hãy thử lại nếu muốn nhé!.", "Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Xin chúc mừng! Lời giải đã hoàn tất, hãy thử lại nếu muốn nhé!.", "Successful", MessageBoxButton.OK, MessageBoxImage.Information);
             RetryButton.IsEnabled = true;
         }
 
         private void RetryButton_Click(object sender, RoutedEventArgs e)
         {
             ResetBoard();
+            if (isPaused)
+            {
+                isPaused = false;
+                PauseResumeButton.Content = "Tạm dừng";
+            }
         }
 
         int CountNextValidMoves(int x, int y)
@@ -96,18 +102,20 @@ namespace MaDiTuan
             return count;
         }
 
-        bool SolveKnightTour(int x, int y, int step)
-        {
-            if (step == N * N)
-                return true; // đã đi hết bàn
 
-            List<(int nextX, int nextY, int onwardCount)> nextMoves = new List<(int, int, int)>();
+        bool SolveKnightTour(int x, int y, int step, List<(int, int)> path)
+        {
+            path.Add((x, y));
+
+            if (step == N * N)
+                return true;
+
+            var nextMoves = new List<(int nextX, int nextY, int onwardCount)>();
 
             for (int i = 0; i < 8; i++)
             {
                 int newX = x + dx[i];
                 int newY = y + dy[i];
-
                 if (newX >= 0 && newX < N && newY >= 0 && newY < N && board[newX, newY] == -1)
                 {
                     int onward = CountNextValidMoves(newX, newY);
@@ -120,14 +128,14 @@ namespace MaDiTuan
             foreach (var move in nextMoves)
             {
                 board[move.nextX, move.nextY] = step;
-                if (SolveKnightTour(move.nextX, move.nextY, step + 1))
+                if (SolveKnightTour(move.nextX, move.nextY, step + 1, path))
                     return true;
-                board[move.nextX, move.nextY] = -1; // quay lui
+                board[move.nextX, move.nextY] = -1;
             }
 
+            path.RemoveAt(path.Count - 1); // backtrack
             return false;
         }
-
 
 
         async Task AnimatePath(List<(int x, int y)> path)
@@ -146,7 +154,11 @@ namespace MaDiTuan
                 }
 
                 DrawBoard(temp, path[i].x, path[i].y);
-                await Task.Delay(300);
+                while (isPaused)
+                {
+                    await Task.Delay(100);
+                }
+                await Task.Delay(400);
             }
         }
 
