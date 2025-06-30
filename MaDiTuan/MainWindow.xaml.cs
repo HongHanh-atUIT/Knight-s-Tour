@@ -64,7 +64,7 @@ namespace MaDiTuan
 
             var path = new List<(int, int)>();
 
-            bool ok = await Task.Run(() => SolveKnightTour(startX, startY, 1, path));
+            bool ok = await SolveKnightTour(startX, startY, 1, path);
 
             if (!ok)
             {
@@ -73,7 +73,6 @@ namespace MaDiTuan
                 return;
             }
 
-            await AnimatePath(path);
             MessageBox.Show($"Xin chúc mừng! Lời giải đã hoàn tất, hãy thử lại nếu muốn nhé!.", "Successful", MessageBoxButton.OK, MessageBoxImage.Information);
             RetryButton.IsEnabled = true;
         }
@@ -88,13 +87,11 @@ namespace MaDiTuan
             }
         }
 
-        // Với board thật sự
         int CountNextValidMoves(int x, int y)
         {
             return CountNextValidMoves(x, y, board);
         }
 
-        // Overload để dùng bảng tạm do in kết quả sau khi giải xong bài toán
         int CountNextValidMoves(int x, int y, int[,] b)
         {
             int count = 0;
@@ -108,79 +105,55 @@ namespace MaDiTuan
             return count;
         }
 
-        bool SolveKnightTour(int x, int y, int step, List<(int, int)> path)
+        async Task<bool> SolveKnightTour(int x, int y, int step, List<(int, int)> path)
         {
             path.Add((x, y));
+            board[x, y] = step - 1;
+
+            var nextMoves = new List<(int x, int y, int onward)>();
+            for (int d = 0; d < 8; d++)
+            {
+                int nx = x + dx[d];
+                int ny = y + dy[d];
+                if (nx >= 0 && nx < N && ny >= 0 && ny < N && board[nx, ny] == -1)
+                {
+                    int onward = CountNextValidMoves(nx, ny);
+                    nextMoves.Add((nx, ny, onward));
+                }
+            }
+            nextMoves.Sort((a, b) => a.onward.CompareTo(b.onward));
+
+            (int x, int y)? nextMove = null;
+            if (nextMoves.Count > 0)
+                nextMove = (nextMoves[0].x, nextMoves[0].y);
+
+            await Dispatcher.InvokeAsync(() => DrawBoard(board, x, y, nextMoves, nextMove));
+            while (isPaused) await Task.Delay(100);
+            await Task.Delay(500);
 
             if (step == N * N)
                 return true;
 
-            var nextMoves = new List<(int nextX, int nextY, int onwardCount)>();
-
-            for (int i = 0; i < 8; i++)
-            {
-                int newX = x + dx[i];
-                int newY = y + dy[i];
-                if (newX >= 0 && newX < N && newY >= 0 && newY < N && board[newX, newY] == -1)
-                {
-                    int onward = CountNextValidMoves(newX, newY);
-                    nextMoves.Add((newX, newY, onward));
-                }
-            }
-
-            nextMoves.Sort((a, b) => a.onwardCount.CompareTo(b.onwardCount));
-
             foreach (var move in nextMoves)
             {
-                board[move.nextX, move.nextY] = step;
-                if (SolveKnightTour(move.nextX, move.nextY, step + 1, path))
+                if (await SolveKnightTour(move.x, move.y, step + 1, path))
                     return true;
-                board[move.nextX, move.nextY] = -1;
             }
 
-            path.RemoveAt(path.Count - 1); 
+            board[x, y] = -1;
+            path.RemoveAt(path.Count - 1);
+
+            await Dispatcher.InvokeAsync(() => DrawBoard(board, x, y));
+            await Task.Delay(300);
             return false;
         }
 
-        async Task AnimatePath(List<(int x, int y)> path)
-        {
-            for (int i = 0; i < path.Count; i++)
-            {
-                int[,] temp = new int[N, N];
-                for (int x = 0; x < N; x++)
-                    for (int y = 0; y < N; y++)
-                        temp[x, y] = -1;
-
-                for (int j = 0; j <= i; j++)
-                {
-                    var (x, y) = path[j];
-                    temp[x, y] = j;
-                }
-
-                var (currX, currY) = path[i];
-
-                // Tìm các nước đi hợp lệ tiếp theo dựa trên temp
-                var nextMoves = new List<(int x, int y, int onward)>();
-                for (int d = 0; d < 8; d++)
-                {
-                    int nx = currX + dx[d];
-                    int ny = currY + dy[d];
-                    if (nx >= 0 && nx < N && ny >= 0 && ny < N && temp[nx, ny] == -1)
-                    {
-                        int onward = CountNextValidMoves(nx, ny, temp);
-                        nextMoves.Add((nx, ny, onward));
-                    }
-                }
-
-                DrawBoard(temp, currX, currY, nextMoves);
-
-                while (isPaused)
-                    await Task.Delay(100);
-                await Task.Delay(500);
-            }
-        }
-
-        void DrawBoard(int[,] b, int knightX, int knightY, List<(int x, int y, int onward)> nextMoves = null)
+        void DrawBoard(
+            int[,] b,
+            int knightX,
+            int knightY,
+            List<(int x, int y, int onward)> nextMoves = null,
+            (int x, int y)? nextMove = null)
         {
             BoardGrid.Children.Clear();
             BoardGrid.RowDefinitions.Clear();
@@ -234,7 +207,7 @@ namespace MaDiTuan
                         {
                             TextBlock icon = new TextBlock
                             {
-                                Text = "♞",
+                                Text = "\u265E",
                                 FontSize = 24,
                                 Foreground = Brushes.DarkBlue
                             };
@@ -254,7 +227,10 @@ namespace MaDiTuan
                         int onward;
                         if (IsNextMove(i, j, out onward))
                         {
-                            cell.Background = Brushes.LightBlue;
+                            if (nextMove.HasValue && nextMove.Value.x == i && nextMove.Value.y == j)
+                                cell.Background = Brushes.LightPink;
+                            else
+                                cell.Background = Brushes.LightBlue;
 
                             TextBlock hint = new TextBlock
                             {
