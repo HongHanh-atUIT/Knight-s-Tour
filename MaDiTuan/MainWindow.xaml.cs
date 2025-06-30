@@ -68,12 +68,12 @@ namespace MaDiTuan
 
             if (!ok)
             {
-                MessageBox.Show("Không tìm thấy lời giải, xin chia buồn! Hãy thử lại nếu muốn nhé!", "Failed", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Không tìm thấy lời giải, xin chia buồn! Nhấn retry nếu muốn thử lại!", "Failed", MessageBoxButton.OK, MessageBoxImage.Information);
                 ResetBoard();
                 return;
             }
 
-            MessageBox.Show($"Xin chúc mừng! Lời giải đã hoàn tất, hãy thử lại nếu muốn nhé!.", "Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Xin chúc mừng! Lời giải đã hoàn tất, Nhấn retry nếu muốn thử lại!.", "Successful", MessageBoxButton.OK, MessageBoxImage.Information);
             RetryButton.IsEnabled = true;
         }
 
@@ -123,7 +123,7 @@ namespace MaDiTuan
             }
             nextMoves.Sort((a, b) => a.onward.CompareTo(b.onward));
 
-            (int x, int y)? nextMove = null;
+            (int x, int y)? nextMove = null; //cho phép null
             if (nextMoves.Count > 0)
                 nextMove = (nextMoves[0].x, nextMoves[0].y);
 
@@ -148,12 +148,7 @@ namespace MaDiTuan
             return false;
         }
 
-        void DrawBoard(
-            int[,] b,
-            int knightX,
-            int knightY,
-            List<(int x, int y, int onward)> nextMoves = null,
-            (int x, int y)? nextMove = null)
+        void DrawBoard(int[,] b, int knightX, int knightY, List<(int x, int y, int onward)> nextMoves = null, (int x, int y)? nextMove = null)
         {
             BoardGrid.Children.Clear();
             BoardGrid.RowDefinitions.Clear();

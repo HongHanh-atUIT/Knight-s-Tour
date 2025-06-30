@@ -1,12 +1,12 @@
 ﻿<Window x:Class="MaDiTuan.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Knight's Tour" Height="700" Width="800">
+        Title="Knight's Tour" Height="800" Width="800">
     <Grid>
         <Grid.Background>
             <ImageBrush ImageSource="img\bg_img.jpg" Stretch="UniformToFill"/>
         </Grid.Background>
-        <DockPanel Margin="10">
+        <StackPanel Margin="10">
             <Label Content="KNIGHT'S TOUR PROBLEM" FontSize="40" DockPanel.Dock="Top" HorizontalAlignment="Center"
                    FontFamily="Constantia" FontWeight="Bold" >
                 <Label.Effect>
@@ -16,7 +16,7 @@
             <Label Content="Solving by Backtracking and Warnsdorff" FontSize="25" DockPanel.Dock="Top" HorizontalAlignment="Center"
                     FontFamily="Constantia" FontWeight="Bold" >
             </Label>
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,10,0,10" VerticalAlignment="Center" HorizontalAlignment="Center" >
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,10" VerticalAlignment="Center" HorizontalAlignment="Center" >
 
                 <TextBlock Text="Start X:" VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"/>
                 <ComboBox x:Name="StartXBox" Width="40" Margin="0,0,10,0" />
@@ -80,6 +80,24 @@
                 <!-- Phần bàn cờ -->
                 <Grid x:Name="BoardGrid" Grid.Row="1" Grid.Column="1" Grid.RowSpan="8" Grid.ColumnSpan="8" />
             </Grid>
-        </DockPanel>
+            
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label Background="LightGreen" Width="80" Height="80" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <TextBlock Text="Current step" FontFamily="Constantia" FontSize="12"
+                    FontWeight="Bold" TextAlignment="Center" TextWrapping="Wrap"/>
+                </Label>
+
+                <Label Background="LightBlue" Width="80" Height="80" Margin="20, 0, 20, 0"
+            HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <TextBlock Text="Next valid steps' onward" FontFamily="Constantia" FontSize="12"
+                     FontWeight="Bold" TextAlignment="Center" TextWrapping="Wrap"/>
+                </Label>
+
+                <Label Background="LightPink" Width="80" Height="80" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
+                    <TextBlock Text="Consider next step's onward" FontFamily="Constantia" FontSize="12"
+                    FontWeight="Bold" TextAlignment="Center" TextWrapping="Wrap"/>
+                </Label>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>
