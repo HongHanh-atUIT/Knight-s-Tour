@@ -15,7 +15,6 @@ namespace MaDiTuan
         int[] dy = { 1, 2, 2, 1, -1, -2, -2, -1 };
         bool isPaused = false;
 
-
         public MainWindow()
         {
             InitializeComponent();
@@ -89,19 +88,25 @@ namespace MaDiTuan
             }
         }
 
+        // Với board thật sự
         int CountNextValidMoves(int x, int y)
+        {
+            return CountNextValidMoves(x, y, board);
+        }
+
+        // Overload để dùng bảng tạm do in kết quả sau khi giải xong bài toán
+        int CountNextValidMoves(int x, int y, int[,] b)
         {
             int count = 0;
             for (int i = 0; i < 8; i++)
             {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
-                if (nx >= 0 && nx < N && ny >= 0 && ny < N && board[nx, ny] == -1)
+                if (nx >= 0 && nx < N && ny >= 0 && ny < N && b[nx, ny] == -1)
                     count++;
             }
             return count;
         }
-
 
         bool SolveKnightTour(int x, int y, int step, List<(int, int)> path)
         {
@@ -133,10 +138,9 @@ namespace MaDiTuan
                 board[move.nextX, move.nextY] = -1;
             }
 
-            path.RemoveAt(path.Count - 1); // backtrack
+            path.RemoveAt(path.Count - 1); 
             return false;
         }
-
 
         async Task AnimatePath(List<(int x, int y)> path)
         {
@@ -153,16 +157,30 @@ namespace MaDiTuan
                     temp[x, y] = j;
                 }
 
-                DrawBoard(temp, path[i].x, path[i].y);
-                while (isPaused)
+                var (currX, currY) = path[i];
+
+                // Tìm các nước đi hợp lệ tiếp theo dựa trên temp
+                var nextMoves = new List<(int x, int y, int onward)>();
+                for (int d = 0; d < 8; d++)
                 {
-                    await Task.Delay(100);
+                    int nx = currX + dx[d];
+                    int ny = currY + dy[d];
+                    if (nx >= 0 && nx < N && ny >= 0 && ny < N && temp[nx, ny] == -1)
+                    {
+                        int onward = CountNextValidMoves(nx, ny, temp);
+                        nextMoves.Add((nx, ny, onward));
+                    }
                 }
-                await Task.Delay(400);
+
+                DrawBoard(temp, currX, currY, nextMoves);
+
+                while (isPaused)
+                    await Task.Delay(100);
+                await Task.Delay(500);
             }
         }
 
-        void DrawBoard(int[,] b, int knightX, int knightY)
+        void DrawBoard(int[,] b, int knightX, int knightY, List<(int x, int y, int onward)> nextMoves = null)
         {
             BoardGrid.Children.Clear();
             BoardGrid.RowDefinitions.Clear();
@@ -172,6 +190,23 @@ namespace MaDiTuan
             {
                 BoardGrid.RowDefinitions.Add(new RowDefinition());
                 BoardGrid.ColumnDefinitions.Add(new ColumnDefinition());
+            }
+
+            bool IsNextMove(int row, int col, out int onward)
+            {
+                onward = -1;
+                if (nextMoves != null)
+                {
+                    foreach (var move in nextMoves)
+                    {
+                        if (move.x == row && move.y == col)
+                        {
+                            onward = move.onward;
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
 
             for (int i = 0; i < N; i++)
@@ -213,10 +248,26 @@ namespace MaDiTuan
                             FontWeight = FontWeights.Bold
                         };
                         content.Children.Add(num);
+                    }
+                    else
+                    {
+                        int onward;
+                        if (IsNextMove(i, j, out onward))
+                        {
+                            cell.Background = Brushes.LightBlue;
 
-                        cell.Child = content;
+                            TextBlock hint = new TextBlock
+                            {
+                                Text = onward.ToString(),
+                                FontSize = 14,
+                                FontWeight = FontWeights.Bold,
+                                Foreground = Brushes.DarkRed
+                            };
+                            content.Children.Add(hint);
+                        }
                     }
 
+                    cell.Child = content;
                     Grid.SetRow(cell, i);
                     Grid.SetColumn(cell, j);
                     BoardGrid.Children.Add(cell);
