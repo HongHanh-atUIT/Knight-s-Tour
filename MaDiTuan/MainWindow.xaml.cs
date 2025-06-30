@@ -89,17 +89,12 @@ namespace MaDiTuan
 
         int CountNextValidMoves(int x, int y)
         {
-            return CountNextValidMoves(x, y, board);
-        }
-
-        int CountNextValidMoves(int x, int y, int[,] b)
-        {
             int count = 0;
             for (int i = 0; i < 8; i++)
             {
                 int nx = x + dx[i];
                 int ny = y + dy[i];
-                if (nx >= 0 && nx < N && ny >= 0 && ny < N && b[nx, ny] == -1)
+                if (nx >= 0 && nx < N && ny >= 0 && ny < N && board[nx, ny] == -1)
                     count++;
             }
             return count;

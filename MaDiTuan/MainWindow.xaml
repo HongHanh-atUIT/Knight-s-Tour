@@ -8,12 +8,12 @@
         </Grid.Background>
         <StackPanel Margin="10">
             <Label Content="KNIGHT'S TOUR PROBLEM" FontSize="40" DockPanel.Dock="Top" HorizontalAlignment="Center"
-                   FontFamily="Constantia" FontWeight="Bold" >
+                   FontFamily="Constantia" FontWeight="Bold" Foreground="AliceBlue">
                 <Label.Effect>
                     <DropShadowEffect/>
                 </Label.Effect>
             </Label>
-            <Label Content="Solving by Backtracking and Warnsdorff" FontSize="25" DockPanel.Dock="Top" HorizontalAlignment="Center"
+            <Label Content="Solving by Backtracking and Greedy" FontSize="25" DockPanel.Dock="Top" HorizontalAlignment="Center"
                     FontFamily="Constantia" FontWeight="Bold" >
             </Label>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,10" VerticalAlignment="Center" HorizontalAlignment="Center" >
